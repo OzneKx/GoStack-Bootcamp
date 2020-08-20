@@ -6,14 +6,14 @@ import './App.css';
 import Header from './components/Header';
 
 function App() {
-  const [projects, setProjects] = useState(['Desenvolvimento de app', 'Front-end web']);
+  const [projects, setProjects] = useState([]);
 
   // useEffect recebe dois parâmetros
   // 1. Qual função deseja disparar
   // 2. Quando deseja disparar uma função
   useEffect(() => {
     api.get('projects').then(response => {
-      console.log(response);
+      setProjects(response.data);
     });
   }, [])
   
@@ -21,10 +21,18 @@ function App() {
   // 1. Variável com seu valor inicial
   // 2. Função para atualizarmos esse valor
 
-  function handleAddProject() {
+  async function handleAddProject() {
     // projects.push(`Novo Projeto ${Date.now()}`);
-    
-    setProjects([...projects, `Novo Projeto ${Date.now()}`]);
+    // setProjects([...projects, `Novo Projeto ${Date.now()}`]);
+
+    const response = await api.post('projects', { 
+      title: `Novo Projeto ${Date.now()}`,
+	    owner: "Kenzo De Albuquerque"
+    });
+
+    const project = response.data;
+
+    setProjects([...projects, project]);
   }
 
   return (
@@ -32,7 +40,7 @@ function App() {
       <Header title="Projects"/>
 
       <ul>
-        {projects.map(project => <li key={project}>{project}</li>)}
+        {projects.map(project => <li key={project.id}>{project.title}</li>)}
       </ul>
 
       <button type="button" onClick={handleAddProject}>Adicionar Projeto</button>
