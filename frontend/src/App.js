@@ -1,14 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import api from './services/api';
 
 import './App.css';
-
-import backgroundImage from './assets/background.jpg';
 
 import Header from './components/Header';
 
 function App() {
   const [projects, setProjects] = useState(['Desenvolvimento de app', 'Front-end web']);
 
+  // useEffect recebe dois parâmetros
+  // 1. Qual função deseja disparar
+  // 2. Quando deseja disparar uma função
+  useEffect(() => {
+    api.get('projects').then(response => {
+      console.log(response);
+    });
+  }, [])
+  
   // useState retorna um array com 2 posições
   // 1. Variável com seu valor inicial
   // 2. Função para atualizarmos esse valor
@@ -22,8 +30,6 @@ function App() {
   return (
     <>
       <Header title="Projects"/>
-
-      <img width={100} src={backgroundImage} />
 
       <ul>
         {projects.map(project => <li key={project}>{project}</li>)}
